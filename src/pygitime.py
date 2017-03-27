@@ -8,19 +8,17 @@ import time
 
 # TODO: Handle timezone properly
 # TODO: _should_skip should maybe reference .gitignore
-# TODO: Handle running for multiple days 
 
 
 PROJECT_ROOT = '.'
 SECONDS_BETWEEN_CHECKS = 2
 TIMESLOT_LENGTH_IN_MINUTES = 15
 LAST_CHECK = 0
-# TODO: DAYS = defaultdict(_setup_timeslots) 
-TIMESLOTS = []
 LOG = logging.getLogger()
 WORK = set()
 
-Work = namedtuple('Work', 'date,timeslot,branch,file_name')
+
+Work = namedtuple('Work', 'date,timeslot,branch,filename')
 
 
 def _should_skip(dir_or_file_name):
@@ -47,26 +45,21 @@ def _get_changes_by_recency(project_root):
     return files, modified_times
 
 
-def _set_up_timeslots():
-    minutes_in_a_day = 24 * 60
-    timeslot_count = int(minutes_in_a_day / TIMESLOT_LENGTH_IN_MINUTES)
-    return [set() for _ in range(timeslot_count)]
-
-
-def _find_timeslot(time):
+def _timeslot_from_timestamp(time):
     seconds = time % (24 * 60 * 60)  # TODO: handle timezone
     return int((seconds / 60) % TIMESLOT_LENGTH_IN_MINUTES)
 
 
 def _determine_timeslot(modified_time):
     modified_date = _date_from_timestamp(modified_time)
-    timeslot = _find_timeslot(modified_time)
+    timeslot = _timeslot_from_timestamp(modified_time)
     return modified_date, timeslot
 
 
 def _record_work(work_date, timeslot, branch, file):
-    work = Work(date=work_date, timeslot=timeslot, branch=branch, file=file)
+    work = Work(date=work_date, timeslot=timeslot, branch=branch, filename=file)
     if work not in WORK:
+        print('Adding', work)
         WORK.add(work)
 
 
@@ -80,8 +73,6 @@ def _date_from_timestamp(timestamp):
 
 
 def start_tracking_time():
-    global TIMESLOTS
-    TIMESLOTS = _set_up_timeslots()
     _update_last_check()
 
     while True:
@@ -101,3 +92,6 @@ def start_tracking_time():
 def query_timeslots():
     print("TODO: Query timeslots here")
 
+
+if __name__ == '__main__':
+    start_tracking_time()
