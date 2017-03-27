@@ -1,7 +1,7 @@
 from collections import defaultdict, namedtuple
 from datetime import datetime
 import os
-import git
+import pygit2 as git
 import logging
 import time
 import pytz
@@ -64,7 +64,7 @@ def _record_work(work_date, timeslot, branch, file):
 
 
 def _get_current_branch(project_root):
-    return git.repo.Repo(project_root).active_branch.name
+    return git.repository.Repository(project_root).head.name
 
 
 def date_from_timestamp(timestamp):
