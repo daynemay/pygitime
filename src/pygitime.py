@@ -46,8 +46,8 @@ def _get_changes_by_recency(project_root):
 
 
 def _timeslot_from_timestamp(time):
-    seconds = time % (24 * 60 * 60)  # TODO: handle timezone
-    return int((seconds / 60) % TIMESLOT_LENGTH_IN_MINUTES)
+    minutes = (time % (24 * 60 * 60)) / 60  # TODO: handle timezone
+    return int(minutes / TIMESLOT_LENGTH_IN_MINUTES)
 
 
 def _determine_timeslot(modified_time):
@@ -64,12 +64,11 @@ def _record_work(work_date, timeslot, branch, file):
 
 
 def _get_current_branch(project_root):
-    repo = git.repo.Repo(project_root)
-    return repo.active_branch.name
+    return git.repo.Repo(project_root).active_branch.name
 
 
 def _date_from_timestamp(timestamp):
-    return datetime.fromtimestamp(time.time()).date()
+    return datetime.fromtimestamp(timestamp).date()
 
 
 def start_tracking_time():
