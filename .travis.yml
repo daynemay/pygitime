@@ -17,6 +17,6 @@ python:
 install: "pip install -r requirements.txt"
 
 # command to run tests
-before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
+before_script: export PYTHONPATH=./src
 script: py.test
 
