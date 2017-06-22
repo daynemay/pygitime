@@ -1,4 +1,4 @@
-pygit2
+GitPython
 pytest
 python-daemon
 pytz
