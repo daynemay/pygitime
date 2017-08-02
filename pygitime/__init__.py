@@ -4,7 +4,7 @@ import os
 import git
 import logging
 import time
-
+import pytz
 
 # TODO: Handle timezone properly
 # TODO: _should_skip should maybe reference .gitignore
@@ -45,14 +45,14 @@ def _get_changes_by_recency(project_root):
     return files, modified_times
 
 
-def _timeslot_from_timestamp(time):
+def timeslot_from_timestamp(time):
     minutes = (time % (24 * 60 * 60)) / 60  # TODO: handle timezone
     return int(minutes / TIMESLOT_LENGTH_IN_MINUTES)
 
 
 def _determine_timeslot(modified_time):
-    modified_date = _date_from_timestamp(modified_time)
-    timeslot = _timeslot_from_timestamp(modified_time)
+    modified_date = date_from_timestamp(modified_time)
+    timeslot = timeslot_from_timestamp(modified_time)
     return modified_date, timeslot
 
 
@@ -67,8 +67,8 @@ def _get_current_branch(project_root):
     return git.repo.Repo(project_root).active_branch.name
 
 
-def _date_from_timestamp(timestamp):
-    return datetime.fromtimestamp(timestamp).date()
+def date_from_timestamp(timestamp):
+    return datetime.fromtimestamp(timestamp, tz=pytz.utc).date()
 
 
 def start_tracking_time():
