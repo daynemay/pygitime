@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python src/pygitime_daemon.py
+python pygitime/pygitime_daemon.py
